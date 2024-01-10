@@ -65,6 +65,8 @@ class PushNotificationService extends AbstractNotificationService {
     super(container);
     this.logger_ = container.logger;
     this.options_ = options;
+    
+    this.eventBusProvider = new EventBusProvider(container, options);
 
     // TODO: add oreder event bus
     for (const [eventName, handle] of Object.entries(orderEventBus) as [string, EventBusFunction][]) {
