@@ -2,7 +2,7 @@ import {
   OrderService,
   Order,
 } from "@medusajs/medusa";
-import { InjectedDependencies, EventBusResponse } from "../types";
+import { EventBusResponse } from "../types";
 // import SendGrid from "@sendgrid/mail"
 
 
@@ -11,7 +11,7 @@ const orderEventBus = {};
 
 // Order Placed Handle
 orderEventBus[OrderService.Events.PLACED] = async (
-  { logger, orderService }: InjectedDependencies,
+  { logger, orderService },
   data: any
 ): Promise<EventBusResponse> => {
   logger.debug("Order placed event, OrderId:" + data.id);

@@ -1,16 +1,12 @@
 import { Logger, OrderService, CustomerService } from "@medusajs/medusa";
 
+// custom notification service name
 const PROVIDER_ID = "push-notification";
 
 
-type InjectedDependencies = {
-  logger: Logger;
-  orderService: OrderService;
-  customerService: CustomerService;
-};
 
 type EventBusFunction = (
-  container: InjectedDependencies,
+  container: any,
   data: any
 ) => Promise<{}>;
 type EventBusResponse = {
@@ -21,7 +17,6 @@ type EventBusResponse = {
 
 export {
   PROVIDER_ID,
-  InjectedDependencies,
   EventBusFunction,
   EventBusResponse,
 };

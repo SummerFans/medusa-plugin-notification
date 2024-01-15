@@ -1,17 +1,8 @@
-import {
-  Logger,
-  AbstractNotificationService,
-} from "@medusajs/medusa";
+import { Logger, AbstractNotificationService } from "@medusajs/medusa";
 import { EntityManager } from "typeorm";
-import {
-  PROVIDER_ID,
-  InjectedDependencies,
-  EventBusResponse,
-  EventBusFunction,
-} from "../types";
+import { PROVIDER_ID, EventBusResponse, EventBusFunction } from "../types";
 
 // import SendGrid from "@sendgrid/mail"
-
 
 import orderEventBus from "../handle/order";
 import customerEventBus from "../handle/customer";
@@ -19,19 +10,20 @@ import customerEventBus from "../handle/customer";
 class EventBusProvider {
   private eventBus_: Map<string, Function> = new Map();
 
-  protected container_: InjectedDependencies;
+  protected container_: any;
   protected logger_: Logger;
   protected options_: any;
 
   // protected client_: any
 
-  constructor(container: InjectedDependencies, options: any) {
+  constructor(container: any, options: any) {
     this.container_ = container;
     this.logger_ = container.logger;
     this.options_ = options;
 
-    // building a provider SDK
-    // SendGrid.setApiKey(options.api_key)
+    // TODO building a provider SDK
+    // exmaple: SendGrid
+    // this.sendGrid = SendGrid.setApiKey(options.api_key)
   }
 
   registerToEventBus(eventName: string, eventHandle: EventBusFunction): void {
@@ -46,6 +38,8 @@ class EventBusProvider {
 
   async eventHandle(eventName: string, data: any): Promise<EventBusResponse> {
     return this.eventBus_.has(eventName)
+      // TODO: add the sendGrid to the eventBusFunction
+      // this.eventBus_.get(eventName)(this.container_, data, this.sendGrid)
       ? this.eventBus_.get(eventName)(this.container_, data)
       : null;
   }
@@ -61,27 +55,27 @@ class PushNotificationService extends AbstractNotificationService {
   protected options_: any;
   protected eventBusProvider: EventBusProvider;
 
-  constructor(container: InjectedDependencies, options) {
+  constructor(container: any, options) {
     super(container);
     this.logger_ = container.logger;
     this.options_ = options;
-    
+
     this.eventBusProvider = new EventBusProvider(container, options);
 
     // TODO: add oreder event bus
-    for (const [eventName, handle] of Object.entries(orderEventBus) as [string, EventBusFunction][]) {
-      this.eventBusProvider.registerToEventBus(
-        eventName,
-        handle
-      );
+    for (const [eventName, handle] of Object.entries(orderEventBus) as [
+      string,
+      EventBusFunction
+    ][]) {
+      this.eventBusProvider.registerToEventBus(eventName, handle);
     }
 
     // TODO: add customer event bus
-    for (const [eventName, handle] of Object.entries(customerEventBus) as [string, EventBusFunction][]) {
-      this.eventBusProvider.registerToEventBus(
-        eventName,
-        handle
-      );
+    for (const [eventName, handle] of Object.entries(customerEventBus) as [
+      string,
+      EventBusFunction
+    ][]) {
+      this.eventBusProvider.registerToEventBus(eventName, handle);
     }
   }
 

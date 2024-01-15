@@ -1,11 +1,11 @@
 import { Customer, CustomerService } from "@medusajs/medusa";
-import { InjectedDependencies, EventBusResponse } from "../types";
+import { EventBusResponse } from "../types";
 
 const customerEventBus = {};
 
 // Customer Created Handle
 customerEventBus[CustomerService.Events.CREATED] = async function customerCreatedHandle(
-  { logger, customerService }: InjectedDependencies,
+  { logger, customerService },
   data: any
 ): Promise<EventBusResponse> {
 
